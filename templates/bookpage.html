@@ -1,0 +1,81 @@
+{% extends "home.html" %}
+
+{% block content %}
+
+    <div id="detalleLibro" class="container">
+        <center>
+            <div class="row">
+                <div class="col-sm-2">
+                    <img src="{{librito[3]}}" alt="Libro" style="width: 90%; height: 90%;"></img>
+                </div>
+                <div class="col-sm-3" style="color: azure;">
+                    <span>ISBN : {{ book.ISBN }}</span> <br>
+                    <span>Title : {{ book.Title }}</span> <br>
+                    <span>Author : {{ book.Author }}</span> <br>
+                    <span>Year : {{ book.YearB }}</span> <br>
+                    <span>Rates : {{librito[1]}}</span> <br>
+                    <span>Average : {{librito[2]}}</span>
+                </div>
+                <div class="col-sm-7" style="color: azure; font-size: 13px;">
+                    <span>Description : {{librito[0]}}</span>
+                </div>
+            </div>
+        </center>
+    </div>
+
+    {% if not Band %}
+    <div class="container">
+        <form action="" method="POST">
+            <center>
+                <select name="CRate" class="Comment">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <input type="text" name="CText" class="Comment" style="width: 50%;">
+                <button name= "CButton" class="Comment">Send</button>
+
+            </center>
+        </form>
+    </div>
+    {% endif %}
+
+    <!--
+    <div class="Elementos scroll-object">
+        <center>
+            <h5 style="color: white;">User : </h5>
+            <h6 style="color: white;">Amazing</h6>
+        </center>
+    </div>
+    -->
+
+    <div id="ListaComentarios">
+        {% for comment in comments %}
+        
+        <div class="ElementosC scroll-object">
+            <center>
+                <h5 style="color: white;">User : {{comment.Username}}  -  <i>({{comment.Rate}})</i></h5>
+                <h6 style="color: white;">{{comment.Comment}}</h6>
+                <h6 style="color: white;">{{comment.Date_Time}}</h6>
+            </center>
+        </div>
+
+        {% endfor %}
+
+        <!--
+        {% for comment in comments %}
+            <div class="ElementosC scroll-object">
+                <center>
+                    <h5 style="color: white;">User : {{comment.User}}</h5>
+                    <h6 style="color: white;">{{comment.Comment}}</h6>
+                    <h6 style="color: white;">{{comment.Date_Time}}</h6>
+                </center>
+            </div>
+        {% endfor %}
+        -->
+    </div>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/Styles/Styles.css">
+    <title>Books</title>
+</head>
+<body>
+    <div class="fondo">
+        <div class="movimiento"></div>
+
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="login()">Login</button>
+                <button type="button" class="toggle-btn" onclick="register()">Register</button>
+            </div>
+
+            <form id="Login" class="formulario" method="POST" action="/login">
+                <input name="TxtuserL" type="text" class="textbox" placeholder="User" required>
+                <input name="TxtpassL" type="password" class="textbox" placeholder="Password" required>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+            <form id="Register" class="formulario" method="POST">
+                <input name="TxtUserR" type="text" class="textbox" placeholder="User" required>
+                <input name="TxtEmailR" type="email" class="textbox" placeholder="Email" required>
+                <input name="TxtPasswordR" type="password" class="textbox" placeholder="Password" required>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var x = document.getElementById("Login");
+        var y = document.getElementById("Register");
+        var z = document.getElementById("btn");
+
+        function register()
+        {
+            x.style.left = "-100%";
+            y.style.left = "2%";
+            z.style.left = "50%";
+        }
+
+        function login() 
+        {
+            x.style.left = "2%";
+            y.style.left = "100%";
+            z.style.left = "0%";
+        }
+    </script>
+
+    <svg>
+        <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+            <feTurbulence id="sea-filter" numOctaves="8" seed="2" baseFrequency="2 8"></feTurbulence>
+            <feDisplacementMap scale="30" in="SourceGraphic"></feDisplacementMap>
+            <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="150s" keyTimes="0;0.5;1" values="0.02 0.08;0.04 0.08;0.02 0.08" repeatCount="indefinite" />
+        </filter>
+    </svg>
+</body>
+</html>

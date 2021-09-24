@@ -1,0 +1,57 @@
+{% extends "home.html" %}
+
+{% block content %}
+
+    <nav class="navbar navbar-expand-lg miLista">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="buscar(this.value)">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div id="ListaLibros">
+        {% for libro in books %}
+        <a href="/BookPage?ISBN={{libro.ISBN}}">
+            <div class="Elementos scroll-object">
+                <center>
+                    <h5 style="color: white;">Title : {{libro.Title}}</h5>
+                    <h6 style="color: white;">ISBN : {{libro.ISBN}}</h6>
+                    <h6 style="color: white;">Author : {{libro.Author}}</h6>
+                </center>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+
+    <script>
+        function buscar (cadena)
+        {
+            let request = new XMLHttpRequest();
+            let data = new FormData();
+
+            data.append('q', cadena);
+            request.open('POST', '/list');
+            request.send(data);
+            request.onreadystatechange = function () {
+                if (this.readyState == 4)
+                {
+                    let contenedor = document.getElementById("ListaLibros");
+                    contenedor.innerHTML = this.responseText;
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
