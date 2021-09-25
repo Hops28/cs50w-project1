@@ -5,7 +5,7 @@ Programación web con python
 - Login, Logout y Register
 - Deberás crear una cuenta o usar una cuenta ya existente para poder iniciar sesión
 - Una vez iniciada la sesión, podrás ver todos los libros que están importados en la base de datos
-- Si colocas algún texto dentro del buscador, comenzará a mostrar todas las coincidencias segón el título, el autor o el isbn
+- Si colocas algún texto dentro del buscador, comenzará a mostrar todas las coincidencias según el título, el autor o el isbn
 - Si das click a uno de los libros en la lista, se mostrará una página donde se mostrarán los detalles del libro:
   - Title
   - ISBN
