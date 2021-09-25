@@ -67,6 +67,8 @@ def bookpage():
 
     if request.method == "POST":
     
+        # # # # # # # # # # # # # # # ENVIO DE RESEÑAS # # # # # # # # # # # # # # # # # # #
+
         # hash the password and insert a new user in the database
         db.execute("""INSERT INTO "Comment" ("Comment", "Id_User", "Id_Book", "Date_Time", "Rate") VALUES (:comment, :iduser, :idbook, :date_time, :rate) """, {"comment": request.form.get("CText"), "iduser": session["user_id"], "idbook": book["Id_Book"], "date_time" : time.strftime("%c"), "rate" : request.form.get("CRate")})
 
@@ -76,6 +78,8 @@ def bookpage():
     band = db.execute(""" SELECT * FROM "Comment" WHERE "Id_User" = :iduser AND "Id_Book" = :idbook """, {"iduser" : session["user_id"], "idbook" : book["Id_Book"]}).fetchall()
 
     comments = db.execute(""" SELECT * FROM "Comment" INNER JOIN "User" ON "User"."Id_User" = "Comment"."Id_User" WHERE "Id_Book" = :idbook """, {"idbook" : book["Id_Book"]}).fetchall()
+
+    # # # # # # # # # # # # # # INFORMACION DESDE LA API DE GOOGLE BOOKS # # # # # # # # # # # # # # # # #
 
     response = requests.get("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).json()
 
