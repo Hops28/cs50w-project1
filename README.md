@@ -20,3 +20,4 @@ Programación web con python
 - Donde hay tres tablas: "Book", "User" y "Comment"
 - En el cual, sólo se le aplicó la normalización a la tabla "Comment" con dos claves primarias "IdUser" y "IdBook"
 - Donde para revisar si el usuario ya comentó o no, se hizo la validación en python
+- Con la API se obtuvieron más detalles de cada libro por mostrar, como la descripción, las valoraciones, su promedio y una imagen que representa el libro
