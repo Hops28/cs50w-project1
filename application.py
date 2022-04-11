@@ -84,11 +84,27 @@ def bookpage():
     response = requests.get("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).json()
 
     librito = []
-    if response["totalItems"] != 0:     
-        librito.append(response["items"][0]["volumeInfo"]["description"])
-        librito.append(response["items"][0]["volumeInfo"]["averageRating"])
-        librito.append(response["items"][0]["volumeInfo"]["ratingsCount"])
-        librito.append(response["items"][0]["volumeInfo"]["imageLinks"]["smallThumbnail"])
+    if response["totalItems"] != 0:
+        if "description" in response["items"][0]["volumeInfo"]:
+            librito.append(response["items"][0]["volumeInfo"]["description"])
+        else:
+            librito.append("Not Found on API")
+            
+        if "averageRating" in response["items"][0]["volumeInfo"]:
+            librito.append(response["items"][0]["volumeInfo"]["averageRating"])
+        else:
+            librito.append("Not Found on API")
+
+        if "ratingsCount" in response["items"][0]["volumeInfo"]:
+            librito.append(response["items"][0]["volumeInfo"]["ratingsCount"])
+        else:
+            librito.append("Not Found on API")
+
+        if "imageLinks" in response["items"][0]["volumeInfo"]:
+            librito.append(response["items"][0]["volumeInfo"]["imageLinks"]["smallThumbnail"])
+        else:
+            librito.append("Not Found on API")
+
     else:
         librito.append("Not Found on API")
         librito.append("Not Found on API")
