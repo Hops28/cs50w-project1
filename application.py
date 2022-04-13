@@ -20,11 +20,11 @@ import requests
 app = Flask(__name__)
 load_dotenv("./env")
 FLASK_APP = os.getenv("FLASK_APP")
-DATABASE_URL = os.getenv("DATABASE_URL")
+DB_URL = os.getenv("DB_URL")
 
 # Check for environment variable
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
+if not os.getenv("DB_URL"):
+    raise RuntimeError("DB_URL is not set")
 
 # Configure session to use filesystem
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -33,7 +33,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
+engine = create_engine(os.getenv("DB_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 
@@ -58,30 +58,36 @@ def Ejemplo():
 
     return ""
 
+
 @app.route("/BookPage", methods=["POST", "GET"])
 @login_required
 def bookpage():
     ISBN = request.args.get("ISBN")
 
-    book = db.execute("""SELECT * FROM "Book" WHERE "ISBN" = :isbn""", {"isbn" : ISBN}).fetchone()
+    book = db.execute(
+        """SELECT * FROM "Book" WHERE "ISBN" = :isbn""", {"isbn": ISBN}).fetchone()
 
     if request.method == "POST":
-    
+
         # # # # # # # # # # # # # # # ENVIO DE RESEÑAS # # # # # # # # # # # # # # # # # # #
 
         # hash the password and insert a new user in the database
-        db.execute("""INSERT INTO "Comment" ("Comment", "Id_User", "Id_Book", "Date_Time", "Rate") VALUES (:comment, :iduser, :idbook, :date_time, :rate) """, {"comment": request.form.get("CText"), "iduser": session["user_id"], "idbook": book["Id_Book"], "date_time" : time.strftime("%c"), "rate" : request.form.get("CRate")})
+        db.execute("""INSERT INTO "Comment" ("Comment", "Id_User", "Id_Book", "Date_Time", "Rate") VALUES (:comment, :iduser, :idbook, :date_time, :rate) """, {
+                   "comment": request.form.get("CText"), "iduser": session["user_id"], "idbook": book["Id_Book"], "date_time": time.strftime("%c"), "rate": request.form.get("CRate")})
 
         # Remember which user has logged in
         db.commit()
 
-    band = db.execute(""" SELECT * FROM "Comment" WHERE "Id_User" = :iduser AND "Id_Book" = :idbook """, {"iduser" : session["user_id"], "idbook" : book["Id_Book"]}).fetchall()
+    band = db.execute(""" SELECT * FROM "Comment" WHERE "Id_User" = :iduser AND "Id_Book" = :idbook """,
+                      {"iduser": session["user_id"], "idbook": book["Id_Book"]}).fetchall()
 
-    comments = db.execute(""" SELECT * FROM "Comment" INNER JOIN "User" ON "User"."Id_User" = "Comment"."Id_User" WHERE "Id_Book" = :idbook """, {"idbook" : book["Id_Book"]}).fetchall()
+    comments = db.execute(""" SELECT * FROM "Comment" INNER JOIN "User" ON "User"."Id_User" = "Comment"."Id_User" WHERE "Id_Book" = :idbook """,
+                          {"idbook": book["Id_Book"]}).fetchall()
 
     # # # # # # # # # # # # # # INFORMACION DESDE LA API DE GOOGLE BOOKS # # # # # # # # # # # # # # # # #
 
-    response = requests.get("https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).json()
+    response = requests.get(
+        "https://www.googleapis.com/books/v1/volumes?q=isbn:" + ISBN).json()
 
     librito = []
     if response["totalItems"] != 0:
@@ -89,7 +95,7 @@ def bookpage():
             librito.append(response["items"][0]["volumeInfo"]["description"])
         else:
             librito.append("Not Found on API")
-            
+
         if "averageRating" in response["items"][0]["volumeInfo"]:
             librito.append(response["items"][0]["volumeInfo"]["averageRating"])
         else:
@@ -101,7 +107,8 @@ def bookpage():
             librito.append("Not Found on API")
 
         if "imageLinks" in response["items"][0]["volumeInfo"]:
-            librito.append(response["items"][0]["volumeInfo"]["imageLinks"]["smallThumbnail"])
+            librito.append(response["items"][0]["volumeInfo"]
+                           ["imageLinks"]["smallThumbnail"])
         else:
             librito.append("Not Found on API")
 
@@ -114,19 +121,22 @@ def bookpage():
 
     band = len(band)
 
-    return render_template("/bookpage.html", book = book, Band = band, comments = comments, librito = librito)
+    return render_template("/bookpage.html", book=book, Band=band, comments=comments, librito=librito)
 
 ################################# API #######################################
+
 
 @app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
 
     ISBN = isbn
 
-    book = db.execute("""SELECT * FROM "Book" WHERE "ISBN" = :isbn""", {"isbn": ISBN}).fetchone()
+    book = db.execute(
+        """SELECT * FROM "Book" WHERE "ISBN" = :isbn""", {"isbn": ISBN}).fetchone()
 
     if book:
-        comments = db.execute(""" SELECT AVG("Rate"), COUNT("Rate") FROM "Comment" WHERE "Id_Book" = :idbook """, {"idbook" : book["Id_Book"]}).fetchone()
+        comments = db.execute(""" SELECT AVG("Rate"), COUNT("Rate") FROM "Comment" WHERE "Id_Book" = :idbook """, {
+                              "idbook": book["Id_Book"]}).fetchone()
 
         respuesta = {
             "title": book["Title"],
@@ -139,31 +149,35 @@ def api(isbn):
 
         return json.dumps(respuesta)
     else:
-        return "Sorry" # CREAR UN JSON EN LUGAR DE ESTE STRING
+        return "Sorry"  # CREAR UN JSON EN LUGAR DE ESTE STRING
 
 ####################################################################
+
 
 @app.route("/list", methods=["POST", "GET"])
 @login_required
 def list():
-    
-    if request.method == 'GET':
-        books = db.execute("""SELECT * FROM "Book" ORDER BY "Title" ASC""").fetchall()
 
-        return render_template("list.html", books = books[0 : 30])
+    if request.method == 'GET':
+        books = db.execute(
+            """SELECT * FROM "Book" ORDER BY "Title" ASC""").fetchall()
+
+        return render_template("list.html", books=books[0: 30])
     else:
         q = request.form.get('q')
 
         if not q:
-            books = db.execute("""SELECT * FROM "Book" ORDER BY "Title" ASC""").fetchall()
+            books = db.execute(
+                """SELECT * FROM "Book" ORDER BY "Title" ASC""").fetchall()
 
-            return render_template("books.html", books = books[0 : 30])
-        
+            return render_template("books.html", books=books[0: 30])
+
         q = '%' + q.capitalize() + '%'
 
-        books = db.execute("""SELECT * FROM "Book" WHERE "ISBN" LIKE :q OR "Title" LIKE :q OR "Author" LIKE :q""", {"q" : q}).fetchall()
+        books = db.execute(
+            """SELECT * FROM "Book" WHERE "ISBN" LIKE :q OR "Title" LIKE :q OR "Author" LIKE :q""", {"q": q}).fetchall()
 
-        return render_template("books.html", books = books[0 : 30])
+        return render_template("books.html", books=books[0: 30])
 
 
 @app.route("/register", methods=["POST", "GET"])
