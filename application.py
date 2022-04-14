@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from helpers import apology, login_required
 
 from flask import Flask, session
@@ -18,7 +18,7 @@ import json
 import requests
 
 app = Flask(__name__)
-load_dotenv("./env")
+# load_dotenv("./env")
 FLASK_APP = os.getenv("FLASK_APP")
 DB_URL = os.getenv("DB_URL")
 
