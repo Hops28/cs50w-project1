@@ -123,7 +123,7 @@ def bookpage():
 
     return render_template("/bookpage.html", book=book, Band=band, comments=comments, librito=librito)
 
-################################# API ######################################
+################################# API #####################################
 
 
 @app.route("/api/<isbn>", methods=["GET"])
