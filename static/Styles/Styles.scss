@@ -19,7 +19,7 @@ body {
   width: $fullW;
   height: $fullH;
   background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2)),
-    url("/static/Images/Sea_cutted.jpg");
+    url("/static/images/Sea_cutted.jpg");
   background-size: cover;
 }
 .fondo .movimiento {
@@ -28,7 +28,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/static/Images/Sea_mask_cutted.png");
+  background-image: url("/static/images/Sea_mask_cutted.png");
   background-size: cover;
   filter: url("#turbulence");
 }
